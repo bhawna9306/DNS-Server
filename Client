@@ -1,0 +1,27 @@
+import socket
+
+# Create a socket object
+client_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# Get local machine name
+server_address = socket.gethostname()
+server_port_number = 8888
+
+while True:
+    query = input('Enter hostname/alias: ')
+
+    # Send query to the server
+    client_sock.sendto(query.encode(), (server_address, server_port_number))
+
+    # Receive response from the server
+    server_data, server_addr = client_sock.recvfrom(1024)
+    print('Response from server:', server_data.decode())
+
+    # Ask if user wants to continue
+    user_input = input('Do you want to continue (y/n)? ')
+
+    if user_input.lower() != 'y':
+        print('Program ended. Thank you.')
+        break
+
+client_sock.close()
