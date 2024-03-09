@@ -1,0 +1,28 @@
+import socket
+server_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # Create a socket object
+
+# Get local machine name
+server_address = socket.gethostname()
+server_port_number = 8888
+
+# Bind the socket to a public host and a well-known port
+server_sock.bind((server_address, server_port_number))
+
+print('Server is waiting for a client to connect...')
+
+while True:
+    # Receive data from the client
+    client_data, client_addr = server_sock.recvfrom(1024)
+    client_message = client_data.decode()
+    print('Received data from client: {}'.format(client_message))
+
+    # Send a response back to the client
+    response = 'Hello, please provide your first name'
+    server_sock.sendto(response.encode(), client_addr)
+
+    # Receive client's name
+    client_name_data, client_addr = server_sock.recvfrom(1024)
+    client_name = client_name_data.decode()
+
+    print('Name of the client is: ' + client_name)
+    server_sock.sendto(("Hello " + client_name + ", Welcome to SIT-202!").encode(), client_addr)
